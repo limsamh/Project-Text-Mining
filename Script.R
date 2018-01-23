@@ -1,4 +1,5 @@
 library("quanteda")
+library(readr)
 
 chemin0 <-"Datasets/reviews/"
 
@@ -52,19 +53,28 @@ train.tokens <- tokens(dataset$text, what = "word",
 
 
 # Tout mettre en miniscule
-train.tokens <- tokens_tolower(train.tokens)
+#train.tokens <- tokens_tolower(train.tokens)
+
+
+#Importation du fichier stopwords.txt
+stpword <- read.delim("stopwords.txt", header = FALSE, dec = ".")
+stpword<-as.character(stpword$V1)
 
 
 
 #Utilisation du dictionnaire de quanteda (en anglais). Mais il faudra utiliser notre
 #propre dictionnaire.
 #On enlève les stopwords
-train.tokens <- tokens_select(train.tokens, stopwords(), 
+# train.tokens <- tokens_select(train.tokens, stopwords(), 
+#                               selection = "remove") 
+
+train.tokens <- tokens_select(train.tokens, stpword, 
                               selection = "remove") 
+
 
 # Pour faire du stemming.
 #On ferra une comparaison après des résultats avec ou sans stemming
-train.tokens <- tokens_wordstem(train.tokens, language = "english")
+#train.tokens <- tokens_wordstem(train.tokens, language = "english")
 
 
 
@@ -78,5 +88,5 @@ dim(train.tokens.matrix)
 
 
 # Investigations des effets du stemming
-colnames(train.tokens.matrix)[1:50]
+#colnames(train.tokens.matrix)[1:50]
 
