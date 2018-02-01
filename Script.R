@@ -1,10 +1,57 @@
+# install.packages("quanteda")
+# install.packages("readr")
+# install.packages("RWeka")
+
 library("quanteda")
 library(readr)
+options(java.parameters = "-Xmx4g")
+library("RWeka")
 
-chemin0 <-"Datasets/reviews/"
 
-vect_class <- c("N","P")
-dataset <- data.frame()
+
+cheminN <-"Datasets/reviews/N/"
+
+val1 <- "N"
+datasetNegative <- data.frame()
+test<-data.frame()
+
+
+
+#Extraction
+
+  dataset1 <- data.frame()
+  
+  
+  for(fich in dir(path=cheminN, pattern="*.txt$", recursive=TRUE)){
+    
+    print(fich)
+    res =  read.delim(paste0(cheminN,fich), header = FALSE, dec = ".")
+    res$V1<-as.character(res$V1)
+    tmp<-paste(res$V1,collapse = " ")
+    
+    test<-rbind(test,tmp)
+    test<- cbind(test,val1)
+    names(test) <- c("text","class")
+    dataset1 <- rbind.data.frame(dataset1,test)
+    test<-data.frame()
+  }
+  datasetNegative <- rbind(datasetNegative,dataset1)
+  dataset1 <- data.frame()
+  
+
+  datasetNegative$text<-as.character(datasetNegative$text)
+View(datasetNegative)
+rm(res,dataset1,test,cheminN,fich,tmp,val1)
+str(datasetNegative)
+
+
+
+
+
+cheminP <-"Datasets/reviews/P/"
+
+val1 <- "P"
+datasetPositive <- data.frame()
 test<-data.frame()
 # 
 # test <- read.delim("Datasets/reviews/N/n_cv100_12406.txt", header = FALSE, dec = ".")
@@ -15,45 +62,51 @@ test<-data.frame()
 # head(test2)
 
 #Extraction
-for(val1 in vect_class){
-  chemin1 <-paste0(chemin0,val1)
-  chemin2<-paste0(chemin1,"/")
-  print(val1)
-  
-  dataset1 <- data.frame()
-  
-  
-  for(fich in dir(path=chemin2, pattern="*.txt$", recursive=TRUE)){
-    
-    print(fich)
-    res =  read.delim(paste0(chemin2,fich), header = FALSE, dec = ".")
-    res$V1<-as.character(res$V1)
-    tmp<-paste(res$V1,collapse = " ")
-    
-    test<-rbind(test,tmp)
-    test<- cbind(test,val1)
-    names(test) <- c("text","class")
-    dataset1 <- rbind.data.frame(dataset1,test)
-    test<-data.frame()
-  }
-  dataset <- rbind(dataset,dataset1)
-  dataset1 <- data.frame()
-  
-}
-dataset$text<-as.character(dataset$text)
-View(dataset)
-rm(res,dataset1,test,chemin0,chemin2,chemin1,fich,tmp,val1,vect_class)
-str(dataset)
 
-#Preprocessing
-# Tokénisation de ma dataset
-train.tokens <- tokens(dataset$text, what = "word", 
+
+dataset1 <- data.frame()
+
+
+for(fich in dir(path=cheminP, pattern="*.txt$", recursive=TRUE)){
+  
+  print(fich)
+  res =  read.delim(paste0(cheminP,fich), header = FALSE, dec = ".")
+  res$V1<-as.character(res$V1)
+  tmp<-paste(res$V1,collapse = " ")
+  
+  test<-rbind(test,tmp)
+  test<- cbind(test,val1)
+  names(test) <- c("text","class")
+  dataset1 <- rbind.data.frame(dataset1,test)
+  test<-data.frame()
+}
+datasetPositive <- rbind(datasetPositive,dataset1)
+dataset1 <- data.frame()
+
+
+datasetPositive$text<-as.character(datasetPositive$text)
+View(datasetPositive)
+rm(res,dataset1,test,cheminN,fich,tmp,val1)
+str(datasetPositive)
+
+#End processidng
+
+
+datasetTest<-data.frame()
+datasetTest <- rbind(datasetPositive,datasetNegative)
+
+
+
+
+
+
+
+
+
+# Tokénisation de ma datasetpositive
+train.tokens <- tokens(datasetTest$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
                        remove_symbols = TRUE, remove_hyphens = TRUE)
-
-
-# Tout mettre en miniscule
-#train.tokens <- tokens_tolower(train.tokens)
 
 
 #Importation du fichier stopwords.txt
@@ -61,20 +114,15 @@ stpword <- read.delim("stopwords.txt", header = FALSE, dec = ".")
 stpword<-as.character(stpword$V1)
 
 
-
-#Utilisation du dictionnaire de quanteda (en anglais). Mais il faudra utiliser notre
-#propre dictionnaire.
-#On enlève les stopwords
-# train.tokens <- tokens_select(train.tokens, stopwords(), 
-#                               selection = "remove") 
-
 train.tokens <- tokens_select(train.tokens, stpword, 
                               selection = "remove") 
 
+dico <- read.table("v-words.txt")
+dico <-as.character(dico$V1)
+str(dico) 
 
-# Pour faire du stemming.
-#On ferra une comparaison après des résultats avec ou sans stemming
-#train.tokens <- tokens_wordstem(train.tokens, language = "english")
+train.tokens <- tokens_select(train.tokens, dico, 
+                              selection = "keep") 
 
 
 
@@ -86,7 +134,12 @@ train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
 train.tokens.matrix <- as.matrix(train.tokens.dfm)
 dim(train.tokens.matrix)
 
+df_test <- as.data.frame(train.tokens.matrix)
 
-# Investigations des effets du stemming
-#colnames(train.tokens.matrix)[1:50]
+df_test<-cbind(df_test,datasetTest$class)
+
+
+
+rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTest,datasetNegative,datasetPositive)
+write.arff(df_test,file="datasetFrequence.arff")
 
