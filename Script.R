@@ -117,7 +117,7 @@ stpword<-as.character(stpword$V1)
 train.tokens <- tokens_select(train.tokens, stpword, 
                               selection = "remove") 
 
-dico <- read.table("v-words.txt")
+dico <- read.table("dico/v-words.txt")
 dico <-as.character(dico$V1)
 str(dico) 
 
@@ -141,5 +141,5 @@ df_test<-cbind(df_test,datasetTest$class)
 
 
 rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTest,datasetNegative,datasetPositive)
-write.arff(df_test,file="datasetFrequence.arff")
+write.arff(df_test,file="output_arff/datasetFrequence.arff")
 

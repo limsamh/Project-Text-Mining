@@ -8,13 +8,6 @@ cheminN <-"Datasets/reviews/N/"
 val1 <- "N"
 datasetNegative <- data.frame()
 test<-data.frame()
-# 
-# test <- read.delim("Datasets/reviews/N/n_cv100_12406.txt", header = FALSE, dec = ".")
-# test$V1<-as.character(test$V1)
-# test<-rbind.data.frame(test2,paste(test$V1,collapse = " "))
-# 
-#  names(test2) <- c("text","class")
-# head(test2)
 
 #Extraction
 
