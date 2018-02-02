@@ -25,9 +25,12 @@ test<-data.frame()
   for(fich in dir(path=cheminN, pattern="*.txt$", recursive=TRUE)){
     
     print(fich)
-    res =  read.delim(paste0(cheminN,fich), header = FALSE, dec = ".")
-    res$V1<-as.character(res$V1)
-    tmp<-paste(res$V1,collapse = " ")
+    res =  read.delim(paste0(cheminN,fich), header = FALSE, sep ="\t")
+    res<-subset(res, grepl("JJ",res$V2)|grepl("RB",res$V2)|
+                  grepl("NN",res$V2)|grepl("VB",res$V2))
+    
+    res$V3<-as.character(res$V3)
+    tmp<-paste(res$V3,collapse = " ")
     
     test<-rbind(test,tmp)
     test<- cbind(test,val1)
@@ -56,9 +59,12 @@ dataset1 <- data.frame()
 for(fich in dir(path=cheminP, pattern="*.txt$", recursive=TRUE)){
   
   print(fich)
-  res =  read.delim(paste0(cheminP,fich), header = FALSE, dec = ".")
-  res$V1<-as.character(res$V1)
-  tmp<-paste(res$V1,collapse = " ")
+  res =  read.delim(paste0(cheminN,fich), header = FALSE, sep ="\t")
+  res<-subset(res, grepl("JJ",res$V2)|grepl("RB",res$V2)|
+                grepl("NN",res$V2)|grepl("VB",res$V2))
+  
+  res$V3<-as.character(res$V3)
+  tmp<-paste(res$V3,collapse = " ")
   
   test<-rbind(test,tmp)
   test<- cbind(test,val1)
@@ -95,7 +101,7 @@ train.tokens <- tokens_select(train.tokens, stpword,
                               selection = "remove") 
 
 #Importation du dictionnaire généré sur Python
-dico <- read.table("dico/v-words.txt")
+dico <- read.table("dico/v-tagged.txt")
 dico <-as.character(dico$V1)
 str(dico) 
 #On ne garde que les mots du dictionnaire
@@ -118,7 +124,7 @@ df_test<-cbind(df_test,datasetTrain$class)
 
 rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTrain,datasetNegative,datasetPositive)
 
-write.arff(df_test,file="output_arff/datasetFrequenceTrain.arff")
+write.arff(df_test,file="output_arff/datasetFrequenceTrainTagged.arff")
 
 
 
@@ -141,9 +147,12 @@ dataset1 <- data.frame()
 for(fich in dir(path=cheminN, pattern="*.txt$", recursive=TRUE)){
   
   print(fich)
-  res =  read.delim(paste0(cheminN,fich), header = FALSE, dec = ".")
-  res$V1<-as.character(res$V1)
-  tmp<-paste(res$V1,collapse = " ")
+  res =  read.delim(paste0(cheminN,fich), header = FALSE, sep ="\t")
+  res<-subset(res, grepl("JJ",res$V2)|grepl("RB",res$V2)|
+                grepl("NN",res$V2)|grepl("VB",res$V2))
+  
+  res$V3<-as.character(res$V3)
+  tmp<-paste(res$V3,collapse = " ")
   
   test<-rbind(test,tmp)
   test<- cbind(test,val1)
@@ -173,9 +182,12 @@ dataset1 <- data.frame()
 for(fich in dir(path=cheminP, pattern="*.txt$", recursive=TRUE)){
   
   print(fich)
-  res =  read.delim(paste0(cheminP,fich), header = FALSE, dec = ".")
-  res$V1<-as.character(res$V1)
-  tmp<-paste(res$V1,collapse = " ")
+  res =  read.delim(paste0(cheminN,fich), header = FALSE, sep ="\t")
+  res<-subset(res, grepl("JJ",res$V2)|grepl("RB",res$V2)|
+                grepl("NN",res$V2)|grepl("VB",res$V2))
+  
+  res$V3<-as.character(res$V3)
+  tmp<-paste(res$V3,collapse = " ")
   
   test<-rbind(test,tmp)
   test<- cbind(test,val1)
@@ -212,7 +224,7 @@ train.tokens <- tokens_select(train.tokens, stpword,
                               selection = "remove") 
 
 #Importation du dictionnaire généré sur Python
-dico <- read.table("dico/v-words.txt")
+dico <- read.table("dico/v-tagged.txt")
 dico <-as.character(dico$V1)
 str(dico) 
 #On ne garde que les mots du dictionnaire
@@ -235,5 +247,5 @@ df_test<-cbind(df_test,datasetTest$class)
 
 rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTest,datasetNegative,datasetPositive)
 
-write.arff(df_test,file="output_arff/datasetFrequenceTest.arff")
+write.arff(df_test,file="output_arff/datasetFrequenceTestTagged.arff")
 
