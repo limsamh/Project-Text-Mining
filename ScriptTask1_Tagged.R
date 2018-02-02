@@ -245,7 +245,7 @@ df_test <- as.data.frame(train.tokens.matrix)
 
 df_test<-cbind(df_test,datasetTest$class)
 
-rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTest,datasetNegative,datasetPositive)
-
 write.arff(df_test,file="output_arff/datasetFrequenceTestTagged.arff")
+
+rm(list=ls())
 
