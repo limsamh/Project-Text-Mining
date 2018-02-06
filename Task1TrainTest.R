@@ -9,7 +9,12 @@ library("RWeka")
 
 # Pour les test et train non taggé
 
-#Task 1 Train
+
+# Task 1 Train ------------------------------------------------------------
+
+
+# Création de la dataset --------------------------------------------------
+
 
 #Reviews non tagged negative
 cheminN <-"Datasets/reviews/train/N/"
@@ -78,6 +83,9 @@ datasetTrain <- rbind(datasetPositive,datasetNegative)
 
 
 
+# Tokenisation et creation du fichier train arff ------------------------------
+
+
 
 
 # Tokénisation de ma dataset
@@ -120,12 +128,16 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTrain,datasetNegativ
 
 write.arff(df_test,file="output_arff/datasetFrequenceTrain.arff")
 
+rm(list=ls())
 
 
 
 
 
-#Task 1 Test
+# Task 1 Test -------------------------------------------------------------
+
+# Création de la dataset --------------------------------------------------
+
 
 #Reviews non tagged negative
 cheminN <-"Datasets/reviews/test/N/"
@@ -195,6 +207,9 @@ datasetTest <- rbind(datasetPositive,datasetNegative)
 
 
 
+# Tokenisation et creation du fichier test arff ---------------------------
+
+
 
 # Tokénisation de ma dataset
 train.tokens <- tokens(datasetTest$text, what = "word", 
@@ -236,3 +251,4 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTest,datasetNegative
 
 write.arff(df_test,file="output_arff/datasetFrequenceTest.arff")
 
+rm(list=ls())
