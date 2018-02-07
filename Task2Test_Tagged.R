@@ -6,14 +6,16 @@ library("quanteda")
 library("readr")
 library("RWeka")
 
+# Fonction creation de dictionnaire ---------------------------------------
 
-
-# Pour les test non taggés
+char2dictionary <- function(x) {
+  result <- as.list(x)  # coercion du vector en list
+  names(result) <- x
+  dictionary(result)
+}
 
 
 # Task 2 Test
-
-
 
 # Création de la dataset --------------------------------------------------
 
@@ -90,19 +92,14 @@ datasetTest <- rbind(datasetPositive,datasetNegative)
 # Utilisation des N Gram de mot :  N=2 ------------------------------------
 
 # Tokénisation de ma dataset
-train.tokens <- tokens(datasetTest$text, what = "word", 
+train.tokens <- tokens(datasetTrain$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
 
 
-#Importation du dictionnaire généré sur Python
-dico <- read.table("dico/v-words.txt")
+dico <- read.table("newDict/2grams_tagged_words.txt")
 dico <-as.character(dico$V1)
-str(dico) 
-#On ne garde que les mots du dictionnaire
-train.tokens <- tokens_select(train.tokens, dico, 
-                              selection = "keep")
 
 
 
@@ -111,6 +108,7 @@ train.tokens <- tokens_skipgrams(train.tokens, n = 2, skip = 0, concatenator = "
 
 # Premier modèle bag-of-words.
 train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
+train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
 
 
 # Transformation en matrix pour investigation.
@@ -119,12 +117,12 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTest$class)
+df_test<-cbind(df_test,datasetTrain$class)
 
-write.arff(df_test,file="output_arff/2gramsMotTestTagged.arff")
-
+write.arff(df_test,file="output_arff/2gramsTaggedMotTest.arff")
 #On enlève les objets non utilisés
 rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
+
 
 
 
@@ -132,27 +130,21 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 # Utilisation des N Gram de mot :  N=3 ------------------------------------
 
 # Tokénisation de ma dataset
-train.tokens <- tokens(datasetTest$text, what = "word", 
+train.tokens <- tokens(datasetTrain$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
 
-
-#Importation du dictionnaire généré sur Python
-dico <- read.table("dico/v-words.txt")
+dico <- read.table("newDict/3grams_tagged_words.txt")
 dico <-as.character(dico$V1)
-str(dico) 
-#On ne garde que les mots du dictionnaire
-train.tokens <- tokens_select(train.tokens, dico, 
-                              selection = "keep")
-
-
 
 train.tokens <- tokens_skipgrams(train.tokens, n = 3, skip = 0, concatenator = " ")
 
 
 # Premier modèle bag-of-words.
 train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
+train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
+
 
 
 # Transformation en matrix pour investigation.
@@ -161,9 +153,9 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTest$class)
+df_test<-cbind(df_test,datasetTrain$class)
 
-write.arff(df_test,file="output_arff/3gramsMotTestTagged.arff")
+write.arff(df_test,file="output_arff/3gramsTaggedMotTest.arff")
 
 #On enlève les objets non utilisés
 rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
@@ -172,7 +164,39 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 
 
 
+# Utilisation des N Gram de mot :  N=2:3 ------------------------------------
 
+# Tokénisation de ma dataset
+train.tokens <- tokens(datasetTrain$text, what = "word", 
+                       remove_numbers = TRUE, remove_punct = TRUE,
+                       remove_symbols = TRUE, remove_hyphens = TRUE)
+
+
+dico <- read.table("newDict/2_3_grams_tagged_words.txt")
+dico <-as.character(dico$V1)
+
+
+train.tokens <- tokens_skipgrams(train.tokens, n = 2:3, concatenator = " ", skip = 0)
+
+
+# Premier modèle bag-of-words.
+train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
+train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
+
+
+
+# Transformation en matrix pour investigation.
+train.tokens.matrix <- as.matrix(train.tokens.dfm)
+dim(train.tokens.matrix)
+
+df_test <- as.data.frame(train.tokens.matrix)
+
+df_test<-cbind(df_test,datasetTrain$class)
+
+write.arff(df_test,file="output_arff/2_3gramsTaggedMotTest.arff")
+
+#On enlève les objets non utilisés
+rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 
 
 
@@ -181,25 +205,22 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 # Utilisation des N Gram de lettres :  N=2 --------------------------------
 
 # Tokénisation de ma dataset
-train.tokens <- tokens(datasetTest$text, what = "word", 
+train.tokens <- tokens(datasetTrain$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
 
 
-# Importation du dictionnaire généré sur Python
-dico <- read.table("dico/v-words.txt")
+dico <- read.table("newDict/2grams_tagged_letters.txt")
 dico <-as.character(dico$V1)
-str(dico) 
-#On ne garde que les mots du dictionnaire
-train.tokens <- tokens_select(train.tokens, dico, 
-                              selection = "keep")
 
 train.tokens <- tokens_ngrams(train.tokens, n = 2, concatenator = " ")
 
 
 # Premier modèle bag-of-words.
 train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
+train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
+
 
 
 # Transformation en matrix pour investigation.
@@ -208,9 +229,11 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTest$class)
+df_test<-cbind(df_test,datasetTrain$class)
 
-write.arff(df_test,file="output_arff/2gramsLettreTestTagged.arff")
+#rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTrain,datasetNegative,datasetPositive)
+
+write.arff(df_test,file="output_arff/2gramsTaggedLettreTest.arff")
 #On enlève les objets non utilisés
 rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 
@@ -219,25 +242,22 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 # Utilisation des N Gram de lettres :  N=3 --------------------------------
 
 # Tokénisation de ma dataset
-train.tokens <- tokens(datasetTest$text, what = "word", 
+train.tokens <- tokens(datasetTrain$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
 
 
-# Importation du dictionnaire généré sur Python
-dico <- read.table("dico/v-words.txt")
+dico <- read.table("newDict/3grams_tagged_letters.txt")
 dico <-as.character(dico$V1)
-str(dico) 
-#On ne garde que les mots du dictionnaire
-train.tokens <- tokens_select(train.tokens, dico, 
-                              selection = "keep")
 
 train.tokens <- tokens_ngrams(train.tokens, n = 3, concatenator = " ")
 
 
 # Premier modèle bag-of-words.
 train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
+train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
+
 
 
 # Transformation en matrix pour investigation.
@@ -246,12 +266,12 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTest$class)
+df_test<-cbind(df_test,datasetTrain$class)
 
-write.arff(df_test,file="output_arff/3gramsLettreTestTagged.arff")
-
+write.arff(df_test,file="output_arff/3gramsTaggedLettreTest.arff")
 #On enlève les objets non utilisés
 rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
+
 
 
 
@@ -260,25 +280,24 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 # Utilisation des N Gram de lettres :  N=2:3 --------------------------------
 
 # Tokénisation de ma dataset
-train.tokens <- tokens(datasetTest$text, what = "word", 
+train.tokens <- tokens(datasetTrain$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
 
 
-# Importation du dictionnaire généré sur Python
-dico <- read.table("dico/v-words.txt")
+
+dico <- read.table("newDict/2_3_grams_tagged_letters.txt")
 dico <-as.character(dico$V1)
-str(dico) 
-#On ne garde que les mots du dictionnaire
-train.tokens <- tokens_select(train.tokens, dico, 
-                              selection = "keep")
+
 
 train.tokens <- tokens_ngrams(train.tokens, n = 2:3, concatenator = " ")
 
 
 # Premier modèle bag-of-words.
 train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
+train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
+
 
 
 # Transformation en matrix pour investigation.
@@ -287,10 +306,9 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTest$class)
+df_test<-cbind(df_test,datasetTrain$class)
 
-write.arff(df_test,file="output_arff/2_3gramsLettreTestTagged.arff")
-
+write.arff(df_test,file="output_arff/2_3gramsTaggedLettreTest.arff")
 
 rm(list=ls())
 gc()

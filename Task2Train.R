@@ -175,11 +175,11 @@ train.tokens <- tokens(datasetTrain$text, what = "word",
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
 
-dico <- read.table("newDict/2_3grams_words.txt")
+dico <- read.table("newDict/2_3_grams_words.txt")
 dico <-as.character(dico$V1)
 
 
-train.tokens <- tokens_skipgrams(train.tokens, n = 2:3, concatenator = " ")
+train.tokens <- tokens_skipgrams(train.tokens, n = 2:3, concatenator = " ", skip = 0)
 
 
 # Premier modèle bag-of-words.
