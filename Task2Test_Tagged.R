@@ -123,6 +123,9 @@ df_test<-cbind(df_test,datasetTest$class)
 
 write.arff(df_test,file="output_arff/2gramsMotTestTagged.arff")
 
+#On enlève les objets non utilisés
+rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
+
 
 
 
@@ -161,6 +164,9 @@ df_test <- as.data.frame(train.tokens.matrix)
 df_test<-cbind(df_test,datasetTest$class)
 
 write.arff(df_test,file="output_arff/3gramsMotTestTagged.arff")
+
+#On enlève les objets non utilisés
+rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 
 
 
@@ -205,6 +211,9 @@ df_test <- as.data.frame(train.tokens.matrix)
 df_test<-cbind(df_test,datasetTest$class)
 
 write.arff(df_test,file="output_arff/2gramsLettreTestTagged.arff")
+#On enlève les objets non utilisés
+rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
+
 
 
 # Utilisation des N Gram de lettres :  N=3 --------------------------------
@@ -240,6 +249,9 @@ df_test <- as.data.frame(train.tokens.matrix)
 df_test<-cbind(df_test,datasetTest$class)
 
 write.arff(df_test,file="output_arff/3gramsLettreTestTagged.arff")
+
+#On enlève les objets non utilisés
+rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 
 
 
@@ -281,3 +293,4 @@ write.arff(df_test,file="output_arff/2_3gramsLettreTestTagged.arff")
 
 
 rm(list=ls())
+gc()
