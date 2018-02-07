@@ -120,7 +120,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,DATAFREQCLASS = datasetTrain$class)
 
 write.arff(df_test,file="output_arff/2gramsTaggedMotTrain.arff")
 #On enlève les objets non utilisés
@@ -156,7 +156,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,DATAFREQCLASS = datasetTrain$class)
 
 write.arff(df_test,file="output_arff/3gramsTaggedMotTrain.arff")
 
@@ -194,7 +194,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,DATAFREQCLASS = datasetTrain$class)
 
 write.arff(df_test,file="output_arff/2_3gramsTaggedMotTrain.arff")
 
@@ -232,7 +232,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,DATAFREQCLASS = datasetTrain$class)
 
 #rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTrain,datasetNegative,datasetPositive)
 
@@ -269,7 +269,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,DATAFREQCLASS = datasetTrain$class)
 
 write.arff(df_test,file="output_arff/3gramsTaggedLettreTrain.arff")
 #On enlève les objets non utilisés
@@ -309,7 +309,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,DATAFREQCLASS = datasetTrain$class)
 
 write.arff(df_test,file="output_arff/2_3gramsTaggedLettreTrain.arff")
 

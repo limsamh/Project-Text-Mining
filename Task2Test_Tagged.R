@@ -92,7 +92,7 @@ datasetTest <- rbind(datasetPositive,datasetNegative)
 # Utilisation des N Gram de mot :  N=2 ------------------------------------
 
 # Tokénisation de ma dataset
-train.tokens <- tokens(datasetTrain$text, what = "word", 
+train.tokens <- tokens(datasetTest$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
@@ -117,7 +117,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,datasetTest$class)
 
 write.arff(df_test,file="output_arff/2gramsTaggedMotTest.arff")
 #On enlève les objets non utilisés
@@ -130,7 +130,7 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 # Utilisation des N Gram de mot :  N=3 ------------------------------------
 
 # Tokénisation de ma dataset
-train.tokens <- tokens(datasetTrain$text, what = "word", 
+train.tokens <- tokens(datasetTest$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
@@ -153,7 +153,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,datasetTest$class)
 
 write.arff(df_test,file="output_arff/3gramsTaggedMotTest.arff")
 
@@ -167,7 +167,7 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 # Utilisation des N Gram de mot :  N=2:3 ------------------------------------
 
 # Tokénisation de ma dataset
-train.tokens <- tokens(datasetTrain$text, what = "word", 
+train.tokens <- tokens(datasetTest$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
@@ -191,7 +191,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,datasetTest$class)
 
 write.arff(df_test,file="output_arff/2_3gramsTaggedMotTest.arff")
 
@@ -205,7 +205,7 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 # Utilisation des N Gram de lettres :  N=2 --------------------------------
 
 # Tokénisation de ma dataset
-train.tokens <- tokens(datasetTrain$text, what = "word", 
+train.tokens <- tokens(datasetTest$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
@@ -229,9 +229,9 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,datasetTest$class)
 
-#rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTrain,datasetNegative,datasetPositive)
+#rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTest,datasetNegative,datasetPositive)
 
 write.arff(df_test,file="output_arff/2gramsTaggedLettreTest.arff")
 #On enlève les objets non utilisés
@@ -242,7 +242,7 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 # Utilisation des N Gram de lettres :  N=3 --------------------------------
 
 # Tokénisation de ma dataset
-train.tokens <- tokens(datasetTrain$text, what = "word", 
+train.tokens <- tokens(datasetTest$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
@@ -266,7 +266,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,datasetTest$class)
 
 write.arff(df_test,file="output_arff/3gramsTaggedLettreTest.arff")
 #On enlève les objets non utilisés
@@ -280,7 +280,7 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
 # Utilisation des N Gram de lettres :  N=2:3 --------------------------------
 
 # Tokénisation de ma dataset
-train.tokens <- tokens(datasetTrain$text, what = "word", 
+train.tokens <- tokens(datasetTest$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
@@ -306,7 +306,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,datasetTest$class)
 
 write.arff(df_test,file="output_arff/2_3gramsTaggedLettreTest.arff")
 
