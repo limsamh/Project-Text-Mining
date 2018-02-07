@@ -1,17 +1,25 @@
 # install.packages("quanteda")
 # install.packages("readr")
 # install.packages("RWeka")
-
-library("quanteda")
-library(readr)
 #options(java.parameters = "-Xmx4g")
+
+
+#Importation des libraires
+library("quanteda")
+library("readr")
 library("RWeka")
 
-# Pour les test et train non taggé
+
+# Fonction creation de dictionnaire ---------------------------------------
+
+char2dictionary <- function(x) {
+  result <- as.list(x)  # coercion du vector en list
+  names(result) <- x
+  dictionary(result)
+}
 
 
 # Task 1 Train ------------------------------------------------------------
-
 
 # Création de la dataset --------------------------------------------------
 
@@ -105,15 +113,11 @@ train.tokens <- tokens_select(train.tokens, stpword,
 #Importation du dictionnaire généré sur Python
 dico <- read.table("dico/v-words.txt")
 dico <-as.character(dico$V1)
-str(dico) 
-#On ne garde que les mots du dictionnaire
-train.tokens <- tokens_select(train.tokens, dico, 
-                              selection = "keep") 
-
-
 
 # Premier modèle bag-of-words.
 train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
+
+train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
 
 
 # Transformation en matrix pour investigation.
@@ -122,16 +126,13 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
+df_test<-cbind(df_test,DATAFREQCLASS = datasetTrain$class)
 
 rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTrain,datasetNegative,datasetPositive)
 
 write.arff(df_test,file="output_arff/datasetFrequenceTrain.arff")
 
-rm(list=ls())
-
-
-
+rm(df_test)
 
 
 # Task 1 Test -------------------------------------------------------------
@@ -228,16 +229,11 @@ train.tokens <- tokens_select(train.tokens, stpword,
 #Importation du dictionnaire généré sur Python
 dico <- read.table("dico/v-words.txt")
 dico <-as.character(dico$V1)
-str(dico) 
-#On ne garde que les mots du dictionnaire
-train.tokens <- tokens_select(train.tokens, dico, 
-                              selection = "keep") 
-
-
 
 # Premier modèle bag-of-words.
 train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
 
+train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
 
 # Transformation en matrix pour investigation.
 train.tokens.matrix <- as.matrix(train.tokens.dfm)
@@ -245,10 +241,10 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTest$class)
+df_test<-cbind(df_test,DATAFREQCLASS = datasetTest$class)
 
 rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTest,datasetNegative,datasetPositive)
 
 write.arff(df_test,file="output_arff/datasetFrequenceTest.arff")
 
-rm(list=ls())
+rm(df_test)
