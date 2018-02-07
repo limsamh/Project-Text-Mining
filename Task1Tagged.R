@@ -1,13 +1,21 @@
 # install.packages("quanteda")
 # install.packages("readr")
 # install.packages("RWeka")
+#options(java.parameters = "-Xmx4g")
 
 library("quanteda")
-library(readr)
-#options(java.parameters = "-Xmx4g")
+library("readr")
 library("RWeka")
 
-# Pour les test et train taggé
+# Fonction creation de dictionnaire ---------------------------------------
+
+char2dictionary <- function(x) {
+  result <- as.list(x)  # coercion du vector en list
+  names(result) <- x
+  dictionary(result)
+}
+
+
 # Task 1 Train ------------------------------------------------------------
 
 # Création de la dataset --------------------------------------------------
@@ -107,15 +115,10 @@ train.tokens <- tokens_select(train.tokens, stpword,
 #Importation du dictionnaire généré sur Python
 dico <- read.table("dico/v-tagged.txt")
 dico <-as.character(dico$V1)
-str(dico) 
-#On ne garde que les mots du dictionnaire
-train.tokens <- tokens_select(train.tokens, dico, 
-                              selection = "keep") 
-
-
-
 # Premier modèle bag-of-words.
 train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
+
+train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
 
 
 # Transformation en matrix pour investigation.
@@ -235,15 +238,11 @@ train.tokens <- tokens_select(train.tokens, stpword,
 #Importation du dictionnaire généré sur Python
 dico <- read.table("dico/v-tagged.txt")
 dico <-as.character(dico$V1)
-str(dico) 
-#On ne garde que les mots du dictionnaire
-train.tokens <- tokens_select(train.tokens, dico, 
-                              selection = "keep") 
-
-
 
 # Premier modèle bag-of-words.
 train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
+
+train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
 
 
 # Transformation en matrix pour investigation.

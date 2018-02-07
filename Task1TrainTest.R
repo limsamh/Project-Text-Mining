@@ -94,8 +94,6 @@ datasetTrain <- rbind(datasetPositive,datasetNegative)
 # Tokenisation et creation du fichier train arff ------------------------------
 
 
-
-
 # Tokénisation de ma dataset
 train.tokens <- tokens(datasetTrain$text, what = "word", 
                        remove_numbers = TRUE, remove_punct = TRUE,
