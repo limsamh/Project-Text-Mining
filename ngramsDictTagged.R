@@ -6,7 +6,7 @@ library("quanteda")
 library("readr")
 library("RWeka")
 
-
+#Dictionnaire des éléments taggés
 
 # Train ngram Mot--------------------------------------------------
 
@@ -25,9 +25,12 @@ dataset1 <- data.frame()
 for(fich in dir(path=cheminN, pattern="*.txt$", recursive=TRUE)){
   
   print(fich)
-  res =  read.delim(paste0(cheminN,fich), header = FALSE, dec = ".")
-  res$V1<-as.character(res$V1)
-  tmp<-paste(res$V1,collapse = " ")
+  res =  read.delim(paste0(cheminN,fich), header = FALSE, sep ="\t")
+  res<-subset(res, grepl("JJ",res$V2)|grepl("RB",res$V2)|
+                grepl("NN",res$V2)|grepl("VB",res$V2))
+  
+  res$V3<-as.character(res$V3)
+  tmp<-paste(res$V3,collapse = " ")
   
   test<-rbind(test,tmp)
   test<- cbind(test,val1)
@@ -56,9 +59,12 @@ dataset1 <- data.frame()
 for(fich in dir(path=cheminP, pattern="*.txt$", recursive=TRUE)){
   
   print(fich)
-  res =  read.delim(paste0(cheminP,fich), header = FALSE, dec = ".")
-  res$V1<-as.character(res$V1)
-  tmp<-paste(res$V1,collapse = " ")
+  res =  read.delim(paste0(cheminP,fich), header = FALSE, sep ="\t")
+  res<-subset(res, grepl("JJ",res$V2)|grepl("RB",res$V2)|
+                grepl("NN",res$V2)|grepl("VB",res$V2))
+  
+  res$V3<-as.character(res$V3)
+  tmp<-paste(res$V3,collapse = " ")
   
   test<-rbind(test,tmp)
   test<- cbind(test,val1)
@@ -140,67 +146,4 @@ write.table(dictTmp, file = "newDict/2_3_grams_tagged_words.txt", sep = "\n" , c
 rm(train.tokens,train.tokens.dfm,train.tokens.matrix,dictTmp)
 
 
-
-# 2 gram Lettre dictionnaire-------------------------
-train.tokens <- tokens_ngrams(tokens(datasetTrain$text, what = "word", 
-                                     remove_numbers = TRUE, remove_punct = TRUE,
-                                     remove_symbols = TRUE, remove_hyphens = TRUE),n= 2, concatenator = " ")
-
-
-
-train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
-train.tokens.dfm <- dfm_trim(train.tokens.dfm, min_docfreq = 10)
-
-train.tokens.matrix <- as.matrix(train.tokens.dfm)
-
-
-dictTmp <- colnames(train.tokens.matrix)
-
-
-write.table(dictTmp, file = "newDict/2grams_tagged_letters.txt", sep = "\n" , col.names = FALSE, row.names = FALSE   )
-rm(train.tokens,train.tokens.dfm,train.tokens.matrix,dictTmp)
-
-
-
-# 3 gram Lettre dictionnaire-------------------------
-train.tokens <- tokens_ngrams(tokens(datasetTrain$text, what = "word", 
-                                     remove_numbers = TRUE, remove_punct = TRUE,
-                                     remove_symbols = TRUE, remove_hyphens = TRUE),n= 3, concatenator = " ")
-
-
-
-train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
-train.tokens.dfm <- dfm_trim(train.tokens.dfm, min_docfreq = 10)
-
-train.tokens.matrix <- as.matrix(train.tokens.dfm)
-
-
-dictTmp <- colnames(train.tokens.matrix)
-
-
-write.table(dictTmp, file = "newDict/3grams_tagged_letters.txt", sep = "\n" , col.names = FALSE, row.names = FALSE   )
-rm(train.tokens,train.tokens.dfm,train.tokens.matrix,dictTmp)
-
-
-# 2-3 gram Lettre dictionnaire-------------------------
-train.tokens <- tokens_ngrams(tokens(datasetTrain$text, what = "word", 
-                                     remove_numbers = TRUE, remove_punct = TRUE,
-                                     remove_symbols = TRUE, remove_hyphens = TRUE),n= 2:3, concatenator = " ")
-
-
-
-train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
-train.tokens.dfm <- dfm_trim(train.tokens.dfm, min_docfreq = 15)
-
-train.tokens.matrix <- as.matrix(train.tokens.dfm)
-
-
-dictTmp <- colnames(train.tokens.matrix)
-
-
-write.table(dictTmp, file = "newDict/2_3_grams_tagged_letters.txt", sep = "\n" , col.names = FALSE, row.names = FALSE)
-
 rm(list=ls())
-
-
-

@@ -6,7 +6,7 @@ library("quanteda")
 library("readr")
 library("RWeka")
 
-
+#Dictionnaire des éléments non taggés
 
 # Train ngram Mot--------------------------------------------------
 
@@ -138,67 +138,6 @@ dictTmp <- colnames(train.tokens.matrix)
 
 write.table(dictTmp, file = "newDict/2_3_grams_words.txt", sep = "\n" , col.names = FALSE, row.names = FALSE   )
 rm(train.tokens,train.tokens.dfm,train.tokens.matrix,dictTmp)
-
-
-
-# 2 gram Lettre dictionnaire-------------------------
-train.tokens <- tokens_ngrams(tokens(datasetTrain$text, what = "word", 
-                                        remove_numbers = TRUE, remove_punct = TRUE,
-                                        remove_symbols = TRUE, remove_hyphens = TRUE),n= 2, concatenator = " ")
-
-
-
-train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
-train.tokens.dfm <- dfm_trim(train.tokens.dfm, min_docfreq = 10)
-
-train.tokens.matrix <- as.matrix(train.tokens.dfm)
-
-
-dictTmp <- colnames(train.tokens.matrix)
-
-
-write.table(dictTmp, file = "newDict/2grams_letters.txt", sep = "\n" , col.names = FALSE, row.names = FALSE   )
-rm(train.tokens,train.tokens.dfm,train.tokens.matrix,dictTmp)
-
-
-
-# 3 gram Lettre dictionnaire-------------------------
-train.tokens <- tokens_ngrams(tokens(datasetTrain$text, what = "word", 
-                                        remove_numbers = TRUE, remove_punct = TRUE,
-                                        remove_symbols = TRUE, remove_hyphens = TRUE),n= 3, concatenator = " ")
-
-
-
-train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
-train.tokens.dfm <- dfm_trim(train.tokens.dfm, min_docfreq = 10)
-
-train.tokens.matrix <- as.matrix(train.tokens.dfm)
-
-
-dictTmp <- colnames(train.tokens.matrix)
-
-
-write.table(dictTmp, file = "newDict/3grams_letters.txt", sep = "\n" , col.names = FALSE, row.names = FALSE   )
-rm(train.tokens,train.tokens.dfm,train.tokens.matrix,dictTmp)
-
-
-# 2-3 gram Lettre dictionnaire-------------------------
-train.tokens <- tokens_ngrams(tokens(datasetTrain$text, what = "word", 
-                                        remove_numbers = TRUE, remove_punct = TRUE,
-                                        remove_symbols = TRUE, remove_hyphens = TRUE),n= 2:3, concatenator = " ")
-
-
-
-train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
-train.tokens.dfm <- dfm_trim(train.tokens.dfm, min_docfreq = 15)
-
-train.tokens.matrix <- as.matrix(train.tokens.dfm)
-
-
-dictTmp <- colnames(train.tokens.matrix)
-
-
-write.table(dictTmp, file = "newDict/2_3_grams_letters.txt", sep = "\n" , col.names = FALSE, row.names = FALSE)
 
 rm(list=ls())
 

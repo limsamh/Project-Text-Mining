@@ -34,9 +34,12 @@ dataset1 <- data.frame()
 for(fich in dir(path=cheminN, pattern="*.txt$", recursive=TRUE)){
   
   print(fich)
-  res =  read.delim(paste0(cheminN,fich), header = FALSE, dec = ".")
-  res$V1<-as.character(res$V1)
-  tmp<-paste(res$V1,collapse = " ")
+  res =  read.delim(paste0(cheminN,fich), header = FALSE, sep ="\t")
+  res<-subset(res, grepl("JJ",res$V2)|grepl("RB",res$V2)|
+                grepl("NN",res$V2)|grepl("VB",res$V2))
+  
+  res$V3<-as.character(res$V3)
+  tmp<-paste(res$V3,collapse = " ")
   
   test<-rbind(test,tmp)
   test<- cbind(test,val1)
@@ -65,9 +68,12 @@ dataset1 <- data.frame()
 for(fich in dir(path=cheminP, pattern="*.txt$", recursive=TRUE)){
   
   print(fich)
-  res =  read.delim(paste0(cheminP,fich), header = FALSE, dec = ".")
-  res$V1<-as.character(res$V1)
-  tmp<-paste(res$V1,collapse = " ")
+  res =  read.delim(paste0(cheminP,fich), header = FALSE, sep ="\t")
+  res<-subset(res, grepl("JJ",res$V2)|grepl("RB",res$V2)|
+                grepl("NN",res$V2)|grepl("VB",res$V2))
+  
+  res$V3<-as.character(res$V3)
+  tmp<-paste(res$V3,collapse = " ")
   
   test<-rbind(test,tmp)
   test<- cbind(test,val1)
@@ -197,118 +203,6 @@ write.arff(df_test,file="output_arff/2_3gramsTaggedMotTest.arff")
 
 #On enlève les objets non utilisés
 rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
-
-
-
-
-
-# Utilisation des N Gram de lettres :  N=2 --------------------------------
-
-# Tokénisation de ma dataset
-train.tokens <- tokens(datasetTest$text, what = "word", 
-                       remove_numbers = TRUE, remove_punct = TRUE,
-                       remove_symbols = TRUE, remove_hyphens = TRUE)
-
-
-
-dico <- read.table("newDict/2grams_tagged_letters.txt")
-dico <-as.character(dico$V1)
-
-train.tokens <- tokens_ngrams(train.tokens, n = 2, concatenator = " ")
-
-
-# Premier modèle bag-of-words.
-train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
-train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
-
-
-
-# Transformation en matrix pour investigation.
-train.tokens.matrix <- as.matrix(train.tokens.dfm)
-dim(train.tokens.matrix)
-
-df_test <- as.data.frame(train.tokens.matrix)
-
-df_test<-cbind(df_test,datasetTest$class)
-
-#rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTest,datasetNegative,datasetPositive)
-
-write.arff(df_test,file="output_arff/2gramsTaggedLettreTest.arff")
-#On enlève les objets non utilisés
-rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
-
-
-
-# Utilisation des N Gram de lettres :  N=3 --------------------------------
-
-# Tokénisation de ma dataset
-train.tokens <- tokens(datasetTest$text, what = "word", 
-                       remove_numbers = TRUE, remove_punct = TRUE,
-                       remove_symbols = TRUE, remove_hyphens = TRUE)
-
-
-
-dico <- read.table("newDict/3grams_tagged_letters.txt")
-dico <-as.character(dico$V1)
-
-train.tokens <- tokens_ngrams(train.tokens, n = 3, concatenator = " ")
-
-
-# Premier modèle bag-of-words.
-train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
-train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
-
-
-
-# Transformation en matrix pour investigation.
-train.tokens.matrix <- as.matrix(train.tokens.dfm)
-dim(train.tokens.matrix)
-
-df_test <- as.data.frame(train.tokens.matrix)
-
-df_test<-cbind(df_test,datasetTest$class)
-
-write.arff(df_test,file="output_arff/3gramsTaggedLettreTest.arff")
-#On enlève les objets non utilisés
-rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
-
-
-
-
-
-
-# Utilisation des N Gram de lettres :  N=2:3 --------------------------------
-
-# Tokénisation de ma dataset
-train.tokens <- tokens(datasetTest$text, what = "word", 
-                       remove_numbers = TRUE, remove_punct = TRUE,
-                       remove_symbols = TRUE, remove_hyphens = TRUE)
-
-
-
-
-dico <- read.table("newDict/2_3_grams_tagged_letters.txt")
-dico <-as.character(dico$V1)
-
-
-train.tokens <- tokens_ngrams(train.tokens, n = 2:3, concatenator = " ")
-
-
-# Premier modèle bag-of-words.
-train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
-train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
-
-
-
-# Transformation en matrix pour investigation.
-train.tokens.matrix <- as.matrix(train.tokens.dfm)
-dim(train.tokens.matrix)
-
-df_test <- as.data.frame(train.tokens.matrix)
-
-df_test<-cbind(df_test,datasetTest$class)
-
-write.arff(df_test,file="output_arff/2_3gramsTaggedLettreTest.arff")
 
 rm(list=ls())
 gc()
