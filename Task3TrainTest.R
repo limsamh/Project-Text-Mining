@@ -10,7 +10,7 @@ library("quanteda")
 library("readr")
 library("RWeka")
 library("arules")
-
+library("arulesSequences")
 
 
 # Fonction creation de dictionnaire ---------------------------------------
@@ -20,6 +20,8 @@ char2dictionary <- function(x) {
   names(result) <- x
   dictionary(result)
 }
+
+
 
 
 # Task 1 Train ------------------------------------------------------------
@@ -32,89 +34,147 @@ cheminN <-"Datasets/reviews/train/N/"
 
 val1 <- "N"
 datasetNegative <- data.frame()
-test<-data.frame()
 #Extraction
 
-dataset1 <- data.frame()
-
-
+res1 <- data.frame()
+res2 <-c(1:800)
+res2 <- as.data.frame(res2)
 for(fich in dir(path=cheminN, pattern="*.txt$", recursive=TRUE)){
   
   print(fich)
   res =  read.delim(paste0(cheminN,fich), header = FALSE, dec = ".")
   res$V1<-as.character(res$V1)
-  tmp<-paste(res$V1,collapse = " ")
-  
-  test<-rbind(test,tmp)
-  test<- cbind(test,val1)
-  names(test) <- c("text","class")
-  dataset1 <- rbind.data.frame(dataset1,test)
-  test<-data.frame()
+  res$V2 <- res2[1,1]
+  res$V3 <- sample(1:1000, 1)
+  res1 <- rbind(res1,res)
+  res2 <-res2[-1,]
+  res2 <- as.data.frame(res2)
+  print(paste("Restant " , nrow(res2), sep = "" ) )
+  #Sys.sleep(2)
 }
-datasetNegative <- rbind(datasetNegative,dataset1)
-dataset1 <- data.frame()
 
-datasetNegative$text<-as.character(datasetNegative$text)
-rm(res,dataset1,test,cheminN,fich,tmp,val1)
+datasetNegative <- rbind(datasetNegative,res1)
 
-
-#Reviews non tagged positive
+#Positive
 cheminP <-"Datasets/reviews/train/P/"
 
 val1 <- "P"
 datasetPositive <- data.frame()
-test<-data.frame()
-
 #Extraction
 
-dataset1 <- data.frame()
-
+res1 <- data.frame()
+res2 <-c(1:800)
+res2 <- as.data.frame(res2)
 for(fich in dir(path=cheminP, pattern="*.txt$", recursive=TRUE)){
-  
   print(fich)
   res =  read.delim(paste0(cheminP,fich), header = FALSE, dec = ".")
   res$V1<-as.character(res$V1)
-  tmp<-paste(res$V1,collapse = " ")
-  
-  test<-rbind(test,tmp)
-  test<- cbind(test,val1)
-  names(test) <- c("text","class")
-  dataset1 <- rbind.data.frame(dataset1,test)
-  test<-data.frame()
+  res$V2 <- res2[1,1]
+  res$V3 <- sample(1:1000, 1)
+  res1 <- rbind(res1,res)
+  res2 <-res2[-1,]
+  res2 <- as.data.frame(res2)
+  print(paste("Restant " , nrow(res2), sep = "" ) )
 }
-datasetPositive <- rbind(datasetPositive,dataset1)
-dataset1 <- data.frame()
 
-datasetPositive$text<-as.character(datasetPositive$text)
-rm(res,dataset1,test,cheminP,fich,tmp,val1)
-#End processing
+datasetPositive <- rbind(datasetPositive,res1)
 
-datasetTrain<-data.frame()
-datasetTrain <- rbind(datasetPositive,datasetNegative)
+datasetPositive$V1<-as.character(datasetPositive$V1)
 
+train.tokens1 <- tokens(datasetPositive$V1, what = "word", 
+                        remove_numbers = TRUE, remove_punct = TRUE,
+                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
+#Importation du fichier stopwords.txt
+stpword <- read.delim("stopwords.txt", header = FALSE, dec = ".")
+stpword<-as.character(stpword$V1)
 
-train.tokens <- tokens(datasetTrain$text, what = "word", 
-                       remove_numbers = TRUE, remove_punct = TRUE,
-                       remove_symbols = TRUE, remove_hyphens = TRUE)
-
+#On enlève les stopwords
+train.tokens1 <- tokens_select(train.tokens1, stpword, 
+                               selection = "remove") 
 # coercion en liste
-ItemSetFreq <- as.list(train.tokens)
-
+ItemSetFreq1 <- as.list(train.tokens1)
+taille <- nrow(datasetPositive)
 # set transaction names
-names(ItemSetFreq) <- paste("Tr",c(1:1600), sep = "")
+names(ItemSetFreq1) <- paste("Tr",c(1:taille), sep = "")
 
 # coerce en transactions
-trans1 <- as(ItemSetFreq, "transactions")
+trans2 <- as(ItemSetFreq1, "transactions")
+transactionInfo(trans2)$sequenceID <- datasetPositive$V2
+transactionInfo(trans2)$eventID <- datasetPositive$V3
 
 
-nrow(trans1)
+s1 <- cspade(trans2, parameter = list(support = 0.4), 
+             control   = list(verbose = TRUE, tidLists = TRUE))
 
-# on utilise apriori avec un support 0.01
-# Soit des itemsets de 2 à 4 apparaissant dans au moins 16 observations
 
-itemsets <- apriori(trans1, parameter = list(target = "frequent",
-                                            supp=0.01, minlen = 2, maxlen=4))
+
+
+fsets1 <- eclat(trans2, parameter = list(supp = 0.001,minlen =2 , maxlen = 3))
+fsets1 <- sort(fsets1)[1:800]
+inspect(fsets1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#datasetNegative$V1<-as.character(datasetNegative$V1)
+
+#train.tokens <- tokens(datasetNegative$V1, what = "word", 
+ #                      remove_numbers = TRUE, remove_punct = TRUE,
+ #                      remove_symbols = TRUE, remove_hyphens = TRUE)
+
+#Importation du fichier stopwords.txt
+#stpword <- read.delim("stopwords.txt", header = FALSE, dec = ".")
+#stpword<-as.character(stpword$V1)
+
+#On enlève les stopwords
+#train.tokens <- tokens_select(train.tokens, stpword, 
+ #                             selection = "remove") 
+
+
+# # coercion en liste
+# ItemSetFreq <- as.list(train.tokens)
+# taille <- nrow(datasetNegative)
+# # set transaction names
+# names(ItemSetFreq) <- paste("Tr",c(1:taille), sep = "")
+# 
+# # coerce en transactions
+# trans1 <- as(ItemSetFreq, "transactions")
+# inspect(trans1)
+# 
+# fsets <- eclat(trans1, parameter = list(supp = 0.001,minlen =2 , maxlen = 3))
+# fsets <- sort(fsets)[1:800]
+# inspect(fsets)
+# 
+# test <-  as(items(fsets), "list")
+# 
+# train.tokens <- as.tokens(test, concatenator = "_")
+# #Importation du dictionnaire généré sur Python
+# dico <- read.table("dico/v-words.txt")
+# dico <-as.character(dico$V1)
+# # Premier modèle bag-of-words.
+# train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
+# 
+# train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
+# 
+
+
+
 
 
 

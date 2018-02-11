@@ -136,7 +136,11 @@ write.arff(df_test,file="output_arff/datasetFrequenceTrainTagged.arff")
 
 rm(list=ls())
 
-
+char2dictionary <- function(x) {
+  result <- as.list(x)  # coercion du vector en list
+  names(result) <- x
+  dictionary(result)
+}
 
 
 # Task 1 Test -------------------------------------------------------------
