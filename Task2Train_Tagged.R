@@ -130,7 +130,8 @@ df_test<-cbind(df_test,DATAFREQCLASS = datasetTrain$class)
 
 write.arff(df_test,file="output_arff/2gramsTaggedMotTrain.arff")
 #On enlève les objets non utilisés
-rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
+rm(datasetNegative,datasetPositive,
+   train.tokens,train.tokens.dfm,train.tokens.matrix,df_test,dico)
 
 
 
@@ -167,7 +168,7 @@ df_test<-cbind(df_test,DATAFREQCLASS = datasetTrain$class)
 write.arff(df_test,file="output_arff/3gramsTaggedMotTrain.arff")
 
 #On enlève les objets non utilisés
-rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test)
+rm(train.tokens,train.tokens.dfm,train.tokens.matrix,df_test,dico)
 
 
 

@@ -108,8 +108,8 @@ stpword<-as.character(stpword$V1)
 train.tokens <- tokens_select(train.tokens, stpword, 
                               selection = "remove") 
 
-#Importation du dictionnaire généré sur Python
-dico <- read.table("dico/v-words.txt")
+#Importation du dictionnaire
+dico <- read.table("newDict/freqwords.txt")
 dico <-as.character(dico$V1)
 
 # Premier modèle bag-of-words.
@@ -224,8 +224,8 @@ stpword<-as.character(stpword$V1)
 train.tokens <- tokens_select(train.tokens, stpword, 
                               selection = "remove") 
 
-#Importation du dictionnaire généré sur Python
-dico <- read.table("dico/v-words.txt")
+#Importation du dictionnaire
+dico <- read.table("newDict/freqwords.txt")
 dico <-as.character(dico$V1)
 
 # Premier modèle bag-of-words.
@@ -245,4 +245,4 @@ rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTest,datasetNegative
 
 write.arff(df_test,file="output_arff/datasetFrequenceTest.arff")
 
-rm(df_test)
+rm(list=ls())

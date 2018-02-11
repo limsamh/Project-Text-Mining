@@ -69,7 +69,7 @@ dataset1 <- data.frame()
 for(fich in dir(path=cheminP, pattern="*.txt$", recursive=TRUE)){
   
   print(fich)
-  res =  read.delim(paste0(cheminN,fich), header = FALSE, sep ="\t")
+  res =  read.delim(paste0(cheminP,fich), header = FALSE, sep ="\t")
   res<-subset(res, grepl("JJ",res$V2)|grepl("RB",res$V2)|
                 grepl("NN",res$V2)|grepl("VB",res$V2))
   
@@ -86,16 +86,14 @@ datasetPositive <- rbind(datasetPositive,dataset1)
 dataset1 <- data.frame()
 
 datasetPositive$text<-as.character(datasetPositive$text)
-rm(res,dataset1,test,cheminP,fich,tmp,val1)
+
 #End processing
 
 datasetTrain<-data.frame()
 datasetTrain <- rbind(datasetPositive,datasetNegative)
-
+rm(datasetNegative,datasetPositive, res,dataset1,test,cheminP,fich,tmp,val1)
 
 # Tokenisation et creation du fichier train arff ------------------------------
-
-
 
 
 # Tokénisation de ma dataset
@@ -112,8 +110,8 @@ stpword<-as.character(stpword$V1)
 train.tokens <- tokens_select(train.tokens, stpword, 
                               selection = "remove") 
 
-#Importation du dictionnaire généré sur Python
-dico <- read.table("dico/v-tagged.txt")
+#Importation du dictionnaire
+dico <- read.table("newDict/freqwords-tagged.txt")
 dico <-as.character(dico$V1)
 # Premier modèle bag-of-words.
 train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
@@ -127,9 +125,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTrain$class)
-
-rm(train.tokens,train.tokens.dfm,train.tokens.matrix,datasetTrain,datasetNegative,datasetPositive)
+df_test<-cbind(df_test,DATAFREQCLASS =datasetTrain$class)
 
 write.arff(df_test,file="output_arff/datasetFrequenceTrainTagged.arff")
 
@@ -182,7 +178,7 @@ rm(res,dataset1,test,cheminN,fich,tmp,val1)
 
 
 #Reviews non tagged positive
-cheminP <-"Datasets/reviews-tagged/test-tagged/neg/"
+cheminP <-"Datasets/reviews-tagged/test-tagged/pos/"
 
 
 val1 <- "P"
@@ -196,7 +192,7 @@ dataset1 <- data.frame()
 for(fich in dir(path=cheminP, pattern="*.txt$", recursive=TRUE)){
   
   print(fich)
-  res =  read.delim(paste0(cheminN,fich), header = FALSE, sep ="\t")
+  res =  read.delim(paste0(cheminP,fich), header = FALSE, sep ="\t")
   res<-subset(res, grepl("JJ",res$V2)|grepl("RB",res$V2)|
                 grepl("NN",res$V2)|grepl("VB",res$V2))
   
@@ -239,8 +235,8 @@ stpword<-as.character(stpword$V1)
 train.tokens <- tokens_select(train.tokens, stpword, 
                               selection = "remove") 
 
-#Importation du dictionnaire généré sur Python
-dico <- read.table("dico/v-tagged.txt")
+#Importation du dictionnaire
+dico <- read.table("newDict/freqwords-tagged.txt")
 dico <-as.character(dico$V1)
 
 # Premier modèle bag-of-words.
@@ -255,7 +251,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTest$class)
+df_test<-cbind(df_test,DATAFREQCLASS = datasetTest$class)
 
 write.arff(df_test,file="output_arff/datasetFrequenceTestTagged.arff")
 
