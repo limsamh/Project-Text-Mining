@@ -104,8 +104,8 @@ train.tokens <- tokens(datasetTest$text, what = "word",
 
 
 
-dico <- read.table("newDict/2grams_tagged_words.txt")
-dico <-as.character(dico$V1)
+dico1 <- read.table("newDict/2grams_tagged_words.txt")
+dico1 <-as.character(dico1$V1)
 
 
 
@@ -114,7 +114,7 @@ train.tokens <- tokens_skipgrams(train.tokens, n = 2, skip = 0, concatenator = "
 
 # Premier modèle bag-of-words.
 train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
-train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
+train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico1))
 
 
 # Transformation en matrix pour investigation.
@@ -123,7 +123,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTest$class)
+df_test<-cbind(df_test,DATAFREQCLASS =datasetTest$class)
 
 write.arff(df_test,file="output_arff/2gramsTaggedMotTest.arff")
 #On enlève les objets non utilisés
@@ -159,7 +159,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTest$class)
+df_test<-cbind(df_test,DATAFREQCLASS =datasetTest$class)
 
 write.arff(df_test,file="output_arff/3gramsTaggedMotTest.arff")
 
@@ -178,8 +178,8 @@ train.tokens <- tokens(datasetTest$text, what = "word",
                        remove_symbols = TRUE, remove_hyphens = TRUE)
 
 
-dico <- read.table("newDict/2_3_grams_tagged_words.txt")
-dico <-as.character(dico$V1)
+dico2 <- read.table("newDict/2_3_grams_tagged_words.txt")
+dico2 <-as.character(dico2$V1)
 
 
 train.tokens <- tokens_skipgrams(train.tokens, n = 2:3, concatenator = " ", skip = 0)
@@ -187,7 +187,7 @@ train.tokens <- tokens_skipgrams(train.tokens, n = 2:3, concatenator = " ", skip
 
 # Premier modèle bag-of-words.
 train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
-train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico))
+train.tokens.dfm <- dfm_lookup(train.tokens.dfm, dictionary = char2dictionary(dico2))
 
 
 
@@ -197,7 +197,7 @@ dim(train.tokens.matrix)
 
 df_test <- as.data.frame(train.tokens.matrix)
 
-df_test<-cbind(df_test,datasetTest$class)
+df_test<-cbind(df_test,DATAFREQCLASS =datasetTest$class)
 
 write.arff(df_test,file="output_arff/2_3gramsTaggedMotTest.arff")
 
