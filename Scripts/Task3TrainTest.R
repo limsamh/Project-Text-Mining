@@ -4,7 +4,7 @@
 # install.packages("arules")
 
 
-#Importation des libraires
+#Importation des librairies
 library("quanteda")
 library("readr")
 library("RWeka")
@@ -48,6 +48,7 @@ for(fich in dir(path=cheminN, pattern="*.txt$", recursive=TRUE)){
   res1 <- rbind(res1,res)
   res2 <-res2[-1,]
   res2 <- as.data.frame(res2)
+  #Pour le debuggage
   print(paste("Restant " , nrow(res2), sep = "" ) )
 }
 datasetNegative <- rbind(datasetNegative,res1)
@@ -73,6 +74,7 @@ for(fich in dir(path=cheminP, pattern="*.txt$", recursive=TRUE)){
   res1 <- rbind(res1,res)
   res2 <-res2[-1,]
   res2 <- as.data.frame(res2)
+  #Pour le debuggage
   print(paste("Restant " , nrow(res2), sep = "" ) )
 }
 

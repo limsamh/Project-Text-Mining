@@ -4,7 +4,7 @@
 #options(java.parameters = "-Xmx4g")
 
 
-#Importation des libraires
+#Importation des librairies
 library("quanteda")
 library("readr")
 library("RWeka")

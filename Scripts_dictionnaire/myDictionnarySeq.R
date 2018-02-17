@@ -122,17 +122,13 @@ train.tokens <- tokens_select(train.tokens, stpword,
                               selection = "remove") 
 # coercion en liste
 ItemSetFreq <- as.list(train.tokens)
-
 taille <- nrow(datasetNegative)
 # set transaction names
 names(ItemSetFreq) <- paste("Tr",c(1:taille), sep = "")
-
 # coerce en transactions
 trans2 <- as(ItemSetFreq, "transactions")
 transactionInfo(trans2)$sequenceID <- datasetNegative$V2
 transactionInfo(trans2)$eventID <- datasetNegative$v4
-
-
 s1 <- cspade(trans2, parameter = list(support = 0.2), 
              control   = list(verbose = TRUE, tidLists = TRUE))
 
